@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Visitor Counter</title>
+	<title>Visitor Counter with Redis</title>
 	<script src="https://unpkg.com/htmx.org@1.9.3"></script>
 	<style>
 		body {
@@ -37,9 +37,9 @@
 </head>
 
 <body>
-	<h1>Welcome to our Website!</h1>
+	<h1>Welcome to our Redis-powered Website!</h1>
 	<p>
-		You are visitor number:
+		Total Visitors:
 		<span id="visitor-count" class="visitor-count" hx-get="/count" hx-trigger="load, every 5s"
 			hx-swap="outerHTML">
 			<!-- The count will be loaded here -->
@@ -53,7 +53,7 @@
 	</p>
 
 	<p>
-		Last visit was at:
+		Last Visit:
 		<span id="last-visit" class="timestamp" hx-get="/count" hx-trigger="load, every 5s"
 			hx-swap="innerHTML"></span>
 	</p>
@@ -61,9 +61,6 @@
 	<div>
 		<button hx-get="/count" hx-target="#visitor-count" hx-swap="outerHTML">
 			Refresh Count
-		</button>
-		<button hx-post="/reset" hx-target="#visitor-count" hx-swap="outerHTML">
-			Reset Counter
 		</button>
 	</div>
 

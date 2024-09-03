@@ -1,69 +1,49 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"sync"
-	"time"
 )
 
-var (
-	totalVisitorCount  int
-	uniqueVisitorCount int
-	mu                 sync.Mutex
-	visitors           = make(map[string]bool)
-)
-
-func incrementVisitorCount(w http.ResponseWriter, r *http.Request) {
-	mu.Lock()
-	defer mu.Unlock()
-
-	// Check for unique visitor using a cookie
-	cookie, err := r.Cookie("visitor_id")
-	if err != nil {
-		// New visitor
-		uniqueVisitorCount++
-		cookieValue := fmt.Sprintf("%d", uniqueVisitorCount)
-		http.SetCookie(w, &http.Cookie{
-			Name:    "visitor_id",
-			Value:   cookieValue,
-			Expires: time.Now().Add(365 * 24 * time.Hour),
-		})
-		visitors[cookieValue] = true
-	} else {
-		// Existing visitor
-		visitors[cookie.Value] = true
-	}
-
-	// Increment the total visitor count
-	totalVisitorCount++
-
-	// Send response with both total and unique visitor count
-	fmt.Fprintf(w, `{"totalVisitors": %d, "uniqueVisitors": %d, "lastVisit": "%s"}`, totalVisitorCount, len(visitors), time.Now().Format(time.RFC1123))
-}
-
-func resetVisitorCount(w http.ResponseWriter, r *http.Request) {
-	mu.Lock()
-	defer mu.Unlock()
-
-	totalVisitorCount = 0
-	visitors = make(map[string]bool)
-
-	fmt.Fprintf(w, "Counter reset successfully")
+type VisitorData struct {
+	TotalVisitors  int    `json:"totalVisitors"`
+	UniqueVisitors int    `json:"uniqueVisitors"`
+	LastVisit      string `json:"lastVisit"`
 }
 
 func main() {
-	// Adjust the file server path to serve from the sibling directory "static_client"
+	// Serve static files from the "static_client" directory
 	http.Handle("/", http.FileServer(http.Dir("../static_client")))
 
-	// Handle the /count endpoint
-	http.HandleFunc("/count", incrementVisitorCount)
+	// Handle the /count endpoint by proxying requests to the redis_backend
+	http.HandleFunc("/count", func(w http.ResponseWriter, r *http.Request) {
+		resp, err := http.Get("http://localhost:8081/update")
+		if err != nil {
+			http.Error(w, "Failed to connect to Redis backend", http.StatusInternalServerError)
+			return
+		}
+		defer resp.Body.Close()
 
-	// Handle the /reset endpoint
-	http.HandleFunc("/reset", resetVisitorCount)
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			http.Error(w, "Failed to read response from Redis backend", http.StatusInternalServerError)
+			return
+		}
 
-	// Start the server on http://localhost:8080
-	fmt.Println("Server is running on http://localhost:8080")
+		var visitorData VisitorData
+		err = json.Unmarshal(body, &visitorData)
+		if err != nil {
+			http.Error(w, "Failed to parse visitor data", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(body)
+	})
+
+	fmt.Println("Counter backend server is running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
