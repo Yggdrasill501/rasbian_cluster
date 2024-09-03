@@ -1,0 +1,9 @@
+# Ignore files not needed in the Docker image
+.git
+.dockerignore
+
+# Ignore local files and directories
+**/README.md
+**/node_modules/
+**/build/
+**/tmp/

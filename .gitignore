@@ -1,0 +1,66 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go build artifacts
+/build/
+*.o
+*.a
+*.out
+*.exe
+
+# Go workspace and dependency directories
+vendor/
+go.sum
+
+# Go module and workspace files
+go.work
+go.work.sum
+
+# Logs
+*.log
+
+# Node modules (if you ever include any frontend dependencies)
+node_modules/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*~
+*.old
+*.orig
+
+# IDE and editor directories/files
+.vscode/
+.idea/
+*.iml
+
+# Docker-related files
+**/Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ignore deployment.yaml if it's generated or managed outside VCS
+**/deployment.yaml
+
+# Ignore documentation build artifacts (if applicable)
+docs/build/
+
+# Sensitive configuration files (if any)
+*.env
+*.secret
+
+# System files
+.DS_Store
+Thumbs.db

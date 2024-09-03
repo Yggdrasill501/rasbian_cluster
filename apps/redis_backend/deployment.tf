@@ -8,34 +8,30 @@ resource "kubernetes_namespace" "go_apps" {
   }
 }
 
-resource "kubernetes_deployment" "counter_backend" {
+resource "kubernetes_deployment" "redis_backend" {
   metadata {
-    name      = "counter-backend"
+    name      = "redis-backend"
     namespace = kubernetes_namespace.go_apps.metadata[0].name
   }
   spec {
     replicas = 1
     selector {
       match_labels = {
-        app = "counter-backend"
+        app = "redis-backend"
       }
     }
     template {
       metadata {
         labels = {
-          app = "counter-backend"
+          app = "redis-backend"
         }
       }
       spec {
         container {
-          name  = "counter-backend"
-          image = "your-dockerhub-username/counter-backend:latest"
+          name  = "redis-backend"
+          image = "your-dockerhub-username/redis-backend:latest"
           port {
-            container_port = 8080
-          }
-          env {
-            name  = "REDIS_BACKEND_URL"
-            value = "http://redis-backend.go-apps.svc.cluster.local:8081"
+            container_port = 8081
           }
         }
       }
@@ -43,20 +39,20 @@ resource "kubernetes_deployment" "counter_backend" {
   }
 }
 
-resource "kubernetes_service" "counter_backend" {
+resource "kubernetes_service" "redis_backend" {
   metadata {
-    name      = "counter-backend"
+    name      = "redis-backend"
     namespace = kubernetes_namespace.go_apps.metadata[0].name
   }
   spec {
     selector = {
-      app = "counter-backend"
+      app = "redis-backend"
     }
     port {
-      port        = 8080
-      target_port = 8080
+      port        = 8081
+      target_port = 8081
       protocol    = "TCP"
     }
-    type = "NodePort"
+    type = "ClusterIP"
   }
 }
