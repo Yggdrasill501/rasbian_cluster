@@ -25,14 +25,16 @@ The project consists of several components:
 - **HTMX Frontend**: A simple, dynamic frontend that interacts with the Go backend to display visitor data.
 
 **Set Up Raspberry Pi Cluster**: Follow the instructions in the [`docs/SETUP_CLUSTER.md`](./docs/SETUP_CLUSTER.md) file to set up the Kubernetes cluster on your Raspberry Pi 4 devices.
+<br>
 **Build and Push Docker Images**: Build Docker images for the `counter_backend` and `redis_backend` applications and push them to your Docker registry.
+<br>
 **Deploy Applications**: Use Terraform to deploy the applications onto the Kubernetes cluster, as detailed in [`docs/DEPLOYMENT_GUIDE.md`](./docs/DEPLOYMENT_GUIDE.md).
+<br>
 **Monitor the Cluster**: Set up Prometheus and Grafana to monitor the cluster and visualize its metrics.
+<br>
 
 ## Contributing
-
 Contributions to this project are welcome! If you have any suggestions or improvements, please feel free to open an issue or submit a pull request.
 
 ## License
-
 This project is licensed under the MIT License. See the [`LICENSE`](./LICENSE) file for more details.
