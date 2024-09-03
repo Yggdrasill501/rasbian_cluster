@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Visitor Counter</title>
+	<script src="https://unpkg.com/htmx.org@1.9.3"></script>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			padding: 50px;
+		}
+
+		button {
+			margin: 10px;
+			padding: 10px 20px;
+			font-size: 16px;
+		}
+
+		.visitor-count {
+			font-size: 24px;
+			color: #007BFF;
+		}
+
+		.unique-count {
+			font-size: 18px;
+			color: #28A745;
+		}
+
+		.timestamp {
+			font-size: 14px;
+			color: #6C757D;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Welcome to our Website!</h1>
+	<p>
+		You are visitor number:
+		<span id="visitor-count" class="visitor-count" hx-get="/count" hx-trigger="load, every 5s"
+			hx-swap="outerHTML">
+			<!-- The count will be loaded here -->
+		</span>
+	</p>
+
+	<p>
+		Unique Visitors:
+		<span id="unique-count" class="unique-count" hx-get="/count" hx-trigger="load, every 5s"
+			hx-swap="innerHTML"></span>
+	</p>
+
+	<p>
+		Last visit was at:
+		<span id="last-visit" class="timestamp" hx-get="/count" hx-trigger="load, every 5s"
+			hx-swap="innerHTML"></span>
+	</p>
+
+	<div>
+		<button hx-get="/count" hx-target="#visitor-count" hx-swap="outerHTML">
+			Refresh Count
+		</button>
+		<button hx-post="/reset" hx-target="#visitor-count" hx-swap="outerHTML">
+			Reset Counter
+		</button>
+	</div>
+
+	<p>
+		The visitor count updates automatically every 5 seconds.
+	</p>
+</body>
+
+</html>
