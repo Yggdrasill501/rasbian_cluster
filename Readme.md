@@ -1,5 +1,5 @@
 # Raspbian Cluster
-
+[![CI for Counter](https://github.com/Yggdrasill501/rasbian_cluster/actions/workflows/go.yml/badge.svg)](https://github.com/Yggdrasill501/rasbian_cluster/actions/workflows/go.yml)
 This mock project demonstrates deploying a Kubernetes cluster on Raspberry Pi 4 devices. The project leverages modern DevOps tools and practices to manage the infrastructure and deploy applications efficiently.
 
 ## Technologies Used
