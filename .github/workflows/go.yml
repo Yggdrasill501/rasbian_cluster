@@ -1,4 +1,4 @@
-name: CI for Counter
+name: CI for Counter Backend
 
 on:
   push:
@@ -22,16 +22,23 @@ jobs:
       with:
         go-version: '1.20'
 
+    - name: Set Working Directory to Counter Backend
+      run: cd apps/counter_backend
+
     - name: Install Dependencies
+      working-directory: ./apps/counter_backend
       run: go mod tidy
 
     - name: Build the Application
-      run: go build -o counter_backend ./apps/counter_backend/main.go
+      working-directory: ./apps/counter_backend
+      run: go build -o counter_backend main.go
 
     - name: Run Tests
-      run: go test ./apps/counter_backend/...
+      working-directory: ./apps/counter_backend
+      run: go test ./...
 
     - name: Verify the Application Runs
+      working-directory: ./apps/counter_backend
       run: |
         ./counter_backend &
         sleep 5
